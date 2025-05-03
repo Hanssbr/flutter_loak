@@ -42,6 +42,7 @@ class AuthRemoteDatasource {
     } else {
       throw Exception('Logout gagal');
     }
+    
   }
 
   Future<Map<String, dynamic>> register({

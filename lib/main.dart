@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_sem2/bloc/get_item_bloc.dart';
@@ -9,11 +11,9 @@ import 'package:project_sem2/domain/usecases/logout_usecase.dart';
 import 'package:project_sem2/domain/usecases/register_usecase.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
 import 'package:project_sem2/presentation/ui/bloc/recomends_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
-import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart' show kReleaseMode;
 
 void main() => runApp(
   DevicePreview(
@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SplashPage(),
+        home: const LoginPage(),
         debugShowCheckedModeBanner: false,
       ),
     );
