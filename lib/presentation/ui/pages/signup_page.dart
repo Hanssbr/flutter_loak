@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
 import 'package:project_sem2/presentation/ui/pages/home_page.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lottie/lottie.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -42,24 +45,51 @@ class _SignUpPageState extends State<SignUpPage> {
         );
 
         final token = result['token'];
-        print('Token: $token');
         await _saveToken(token);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        showDialog(
+  context: context,
+  barrierDismissible: false,
+  builder: (context) {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sign up berhasil!')),
-        );
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset(
+              'assets/lottie/success.json',
+              width: 120,
+              height: 120,
+              repeat: false,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Akun kamu berhasil dibuat.",
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+);
       } catch (e) {
         print('Error: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal melakukan registrasi')),
-        );
-      } finally {
-        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Gagal melakukan registrasi')));
       }
     }
   }
@@ -101,9 +131,9 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 8),
               Text(
                 'Join our community today',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: Colors.grey.shade600),
               ),
               const SizedBox(height: 40),
               Form(
@@ -204,7 +234,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.grey.shade600,
                           ),
                           onPressed: () {
-                            setState(() => _obscurePassword = !_obscurePassword);
+                            setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            );
                           },
                         ),
                         border: OutlineInputBorder(
@@ -251,7 +283,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             color: Colors.grey.shade600,
                           ),
                           onPressed: () {
-                            setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                            setState(
+                              () =>
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword,
+                            );
                           },
                         ),
                         border: OutlineInputBorder(
@@ -319,23 +355,24 @@ class _SignUpPageState extends State<SignUpPage> {
                           elevation: 0,
                           shadowColor: Colors.transparent,
                         ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
+                        child:
+                            _isLoading
+                                ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                                : const Text(
+                                  'SIGN UP',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              )
-                            : const Text(
-                                'SIGN UP',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
                       ),
                     ),
                     const SizedBox(height: 32),
