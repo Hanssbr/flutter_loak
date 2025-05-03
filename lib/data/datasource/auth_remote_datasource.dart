@@ -40,9 +40,9 @@ class AuthRemoteDatasource {
     if (response.statusCode == 200) {
       await _local.removeToken();
     } else {
+      await _local.clearAll();
       throw Exception('Logout gagal');
     }
-    
   }
 
   Future<Map<String, dynamic>> register({
