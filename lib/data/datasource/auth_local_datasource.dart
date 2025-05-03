@@ -14,8 +14,14 @@ class AuthLocalDatasource {
     return sharedPreferences.getString(_keyToken);
   }
 
-  Future<void> removeToken() async {
+  // Future<void> removeToken() async {
+  //   final sharedPreferences = await SharedPreferences.getInstance();
+  //   await sharedPreferences.remove(_keyToken);
+  // }
+
+  Future<void> clearAll() async {
     final sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.remove(_keyToken);
+    await sharedPreferences.clear(); // Menghapus semua data
+    print('[CLEAR] Semua data di SharedPreferences telah dihapus.');
   }
 }
