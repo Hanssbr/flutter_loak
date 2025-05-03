@@ -16,16 +16,15 @@ class _SplashPageState extends State<SplashPage> {
   final _local = AuthLocalDatasource();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _authCheck();
   }
 
-
   Future<void> _authCheck() async {
     await Future.delayed(const Duration(seconds: 2));
     final token = await _local.getToken();
-
+    print("Token: $token");
 
     if (!mounted) return;
     if (token != null) {
