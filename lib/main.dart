@@ -14,6 +14,7 @@ import 'package:project_sem2/presentation/ui/bloc/recomends_bloc.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
+import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
 
 void main() => runApp(
   DevicePreview(
@@ -70,7 +71,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const LoginPage(),
+        home: const SplashPage(),
         debugShowCheckedModeBanner: false,
       ),
     );
