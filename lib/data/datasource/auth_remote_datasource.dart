@@ -24,6 +24,26 @@ class AuthRemoteDatasource {
     }
   }
 
+  // Future<void> logout() async {
+  //   final token = await _local.getToken();
+  //   if (token == null) throw Exception('Token not found');
+
+  //   final response = await http.post(
+  //     Uri.parse('https://givebox.hanssu.my.id/api/logout'),
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     await _local.removeToken();
+  //   } else {
+  //     throw Exception('Logout gagal');
+  //   }
+  // }
+
   Future<void> logout() async {
     final token = await _local.getToken();
     if (token == null) throw Exception('Token not found');
@@ -38,7 +58,7 @@ class AuthRemoteDatasource {
     );
 
     if (response.statusCode == 200) {
-      await _local.removeToken();
+      await _local.clearAll();
     } else {
       await _local.clearAll();
       throw Exception('Logout gagal');
