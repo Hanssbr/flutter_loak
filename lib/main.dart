@@ -8,7 +8,9 @@ import 'package:project_sem2/domain/usecases/login_usecase.dart';
 import 'package:project_sem2/domain/usecases/logout_usecase.dart';
 import 'package:project_sem2/domain/usecases/register_usecase.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
+import 'package:project_sem2/presentation/ui/bloc/bloc/favorit_bloc.dart';
 import 'package:project_sem2/presentation/ui/bloc/recomends_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
 import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
@@ -47,6 +49,21 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => RecomendsBloc()..add(OnGetRecomends()),
           child: const RecommendationPage(),
+        ),
+        BlocProvider(
+          create: (context) {
+            final favoritBloc = FavoritBloc();
+            AuthLocalDatasource().getToken().then((token) {
+              if (token != null) {
+                favoritBloc.add(LoadFavorit(token: token));
+              } else {
+                // Bisa kasih handling kalau token null
+                print('Token tidak ditemukan');
+              }
+            });
+            return favoritBloc;
+          },
+          child: const FavoritPage(),
         ),
       ],
       child: MaterialApp(
