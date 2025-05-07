@@ -15,6 +15,13 @@ class _ProductPageState extends State<ProductPage> {
   bool _isGrid = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Memicu pengambilan data saat halaman dimuat
+    context.read<GetItemBloc>().add(OnGetItem());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

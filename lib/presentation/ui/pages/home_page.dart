@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:project_sem2/presentation/ui/pages/create_post_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/create_item_page.dart';
 import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
 import 'package:project_sem2/presentation/ui/pages/settings_page.dart';
 import 'package:project_sem2/presentation/ui/widgets/nav_item.dart';
+
+import '../../../bloc/bloc/create_item_bloc.dart';
 import '../../../core/utils/core.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,9 +41,16 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CreatePostPage()),
+            MaterialPageRoute(
+              builder:
+                  (context) => BlocProvider(
+                    create: (_) => CreateItemBloc(),
+                    child: const CreateItemPage(),
+                  ),
+            ),
           );
         },
+
         backgroundColor: AppColors.greenLime,
         elevation: 0,
         shape: const CircleBorder(),
