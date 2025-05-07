@@ -5,8 +5,9 @@ import 'package:project_sem2/data/model/item_model.dart';
 
 class ProductCard extends StatefulWidget {
   final Items product;
+  final bool isGrid;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({super.key, required this.product, this.isGrid = false});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -14,8 +15,13 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   final favoriteLocal = FavoriteLocalDatasource();
-
   bool isFavorited = false;
+  String _truncateText(String text, int maxLength) {
+    return (text.length <= maxLength)
+        ? text
+        : '${text.substring(0, maxLength)}...';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +31,7 @@ class _ProductCardState extends State<ProductCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loadFavoriteStatus(); // dipanggil ulang setiap kali halaman "muncul kembali"
+    loadFavoriteStatus();
   }
 
   void loadFavoriteStatus() async {
@@ -39,13 +45,13 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gambar dan tombol favorit dalam Stack
+          // Gambar dan tombol favorit
           Stack(
             children: [
               ClipRRect(
@@ -53,7 +59,7 @@ class _ProductCardState extends State<ProductCard> {
                   top: Radius.circular(16),
                 ),
                 child: SizedBox(
-                  height: 180,
+                  height: widget.isGrid ? 140 : 180,
                   width: double.infinity,
                   child: Image.network(
                     widget.product.photoUrl,
@@ -80,7 +86,6 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ),
               ),
-              // Tombol favorite di atas gambar
               Positioned(
                 top: 8,
                 right: 8,
@@ -90,16 +95,13 @@ class _ProductCardState extends State<ProductCard> {
                     borderRadius: BorderRadius.circular(30),
                     onTap: () async {
                       final newStatus = !isFavorited;
-
                       await favoriteLocal.saveFavoriteStatus(
                         widget.product.id.toString(),
                         newStatus,
                       );
-
                       setState(() {
                         isFavorited = newStatus;
                       });
-
                       favoriteItem(widget.product.id);
                     },
                     child: Padding(
@@ -124,7 +126,7 @@ class _ProductCardState extends State<ProductCard> {
                 Text(
                   widget.product.name ?? 'No Name',
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,
@@ -133,25 +135,26 @@ class _ProductCardState extends State<ProductCard> {
                 const SizedBox(height: 8),
                 Text(
                   widget.product.description ?? 'No description available',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  maxLines: 2,
+                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.category, size: 16, color: Colors.grey[600]),
+                    Icon(Icons.category, size: 14, color: Colors.grey[600]),
                     const SizedBox(width: 4),
                     Text(
                       widget.product.category ?? 'Uncategorized',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const Spacer(),
-                    Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                    Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
                     const SizedBox(width: 4),
                     Text(
-                      widget.product.location ?? 'Unknown',
+                      _truncateText(widget.product.location ?? 'Unknown', 4),
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
