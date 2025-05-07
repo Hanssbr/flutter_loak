@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:project_sem2/data/model/item_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:d_method/d_method.dart';
+import 'package:http/http.dart' as http;
+import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
+import 'package:project_sem2/data/model/item_model.dart';
 
 class ItemsSource {
   static Future<List<Items>?> getItems() async {
@@ -23,6 +24,33 @@ class ItemsSource {
     } catch (e) {
       DMethod.log(e.toString());
       return null;
+    }
+  }
+
+  Future<void> favoriteItem(int itemId) async {
+    final local = AuthLocalDatasource();
+    final token = await local.getToken();
+
+    if (token == null) {
+      print('[ERROR] Token tidak ditemukan!');
+      return;
+    }
+
+    final url = Uri.parse(
+      'https://givebox.hanssu.my.id/api/items/$itemId/favorite',
+    );
+
+    final response = await http.post(
+      url,
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      print('[SUCCESS] Item berhasil difavoritkan.');
+      print('[INFO] Response Body: ${response.body}');
+    } else {
+      print('[ERROR] Gagal favorite item. Status: ${response.statusCode}');
+      print('[BODY] ${response.body}');
     }
   }
 }
