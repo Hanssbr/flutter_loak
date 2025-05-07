@@ -18,7 +18,7 @@ dependencies:
   device_preview: ^1.2.0
   d_method: ^0.2.6
   lottie: ^3.3.1
-
+  file_picker: ^6.1.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0

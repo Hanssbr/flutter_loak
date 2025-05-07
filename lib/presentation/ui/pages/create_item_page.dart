@@ -1,8 +1,8 @@
-import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../bloc/bloc/create_item_bloc.dart';
 import '../../../data/datasource/auth_local_datasource.dart';
@@ -23,18 +23,25 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final conditionController = TextEditingController();
   final locationController = TextEditingController();
 
-  File? _imageFile;
+  Uint8List? _imageBytes;
   bool isSubmitting = false;
 
   Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() => _imageFile = File(picked.path));
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+      withData: true, // <-- penting untuk web agar dapat bytes
+    );
+
+    if (result != null && result.files.single.bytes != null) {
+      setState(() {
+        _imageBytes = result.files.single.bytes;
+      });
     }
   }
 
   void _submit(BuildContext context) async {
-    if (!_formKey.currentState!.validate() || _imageFile == null) {
+    if (!_formKey.currentState!.validate() || _imageBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Semua field termasuk foto harus diisi")),
       );
@@ -44,16 +51,16 @@ class _CreateItemPageState extends State<CreateItemPage> {
     final token = await AuthLocalDatasource().getToken();
 
     context.read<CreateItemBloc>().add(
-          CreateEvent(
-            name: nameController.text,
-            description: descriptionController.text,
-            category: categoryController.text,
-            condition: conditionController.text,
-            location: locationController.text,
-            photo: _imageFile!,
-            token: token!,
-          ),
-        );
+      CreateEvent(
+        name: nameController.text,
+        description: descriptionController.text,
+        category: categoryController.text,
+        condition: conditionController.text,
+        location: locationController.text,
+        photo: _imageBytes!,
+        token: token!,
+      ),
+    );
   }
 
   @override
@@ -72,9 +79,9 @@ class _CreateItemPageState extends State<CreateItemPage> {
           }
 
           if (state is CreateItemError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -100,9 +107,17 @@ class _CreateItemPageState extends State<CreateItemPage> {
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.grey[100],
                       ),
-                      child: _imageFile != null
-                          ? Image.file(_imageFile!, fit: BoxFit.cover)
-                          : const Center(child: Text("Pilih Foto")),
+                      child:
+                          _imageBytes != null
+                              ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.memory(
+                                  _imageBytes!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
+                              )
+                              : const Center(child: Text("Pilih Foto")),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -110,13 +125,16 @@ class _CreateItemPageState extends State<CreateItemPage> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.send),
-                      label: isSubmitting
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text('Kirim'),
+                      label:
+                          isSubmitting
+                              ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                              : const Text('Kirim'),
                       onPressed: isSubmitting ? null : () => _submit(context),
                     ),
                   ),
@@ -138,8 +156,9 @@ class _CreateItemPageState extends State<CreateItemPage> {
           labelText: label,
           border: const OutlineInputBorder(),
         ),
-        validator: (value) =>
-            value == null || value.isEmpty ? '$label wajib diisi' : null,
+        validator:
+            (value) =>
+                value == null || value.isEmpty ? '$label wajib diisi' : null,
       ),
     );
   }

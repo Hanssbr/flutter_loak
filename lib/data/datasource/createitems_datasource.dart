@@ -12,53 +12,50 @@ class CreateitemsDatasource {
     dynamic photoFile,
     String token,
   ) async {
-    final uri = Uri.parse('https://givebox.hanssu.my.id/api/all-items');
-    final request = http.MultipartRequest('POST', uri);
+    try {
+      final uri = Uri.parse('https://givebox.hanssu.my.id/api/all-items');
+      final request = http.MultipartRequest('POST', uri);
 
-    request.headers['Authorization'] = 'Bearer $token';
-    request.headers['Accept'] = 'application/json';
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
 
-    // Tambah form field
-    request.fields['name'] = item.name ?? '';
-    request.fields['description'] = item.description ?? '';
-    request.fields['category'] = item.category ?? '';
-    request.fields['condition'] = item.condition ?? '';
-    request.fields['location'] = item.location ?? '';
-    request.fields['user_id'] = item.userId ?? '';
+      request.fields['name'] = item.name ?? '';
+      request.fields['description'] = item.description ?? '';
+      request.fields['category'] = item.category ?? '';
+      request.fields['condition'] = item.condition ?? '';
+      request.fields['location'] = item.location ?? '';
+      request.fields['user_id'] = item.userId ?? '';
 
-    // Tambah file (handle platform)
-    if (!kIsWeb && photoFile is File) {
-      final mimeType = lookupMimeType(photoFile.path)?.split('/');
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'photo',
-          photoFile.path,
-          contentType:
-              mimeType != null ? MediaType(mimeType[0], mimeType[1]) : null,
-        ),
-      );
-    } else if (kIsWeb && photoFile is Uint8List) {
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'photo',
-          photoFile,
-          filename: 'upload.jpg',
-          contentType: MediaType('image', 'jpeg'),
-        ),
-      );
-    }
+      if (!kIsWeb && photoFile is File) {
+        final mimeType = lookupMimeType(photoFile.path)?.split('/');
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'photo',
+            photoFile.path,
+            contentType:
+                mimeType != null ? MediaType(mimeType[0], mimeType[1]) : null,
+          ),
+        );
+      } else if (kIsWeb && photoFile is Uint8List) {
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'photo',
+            photoFile,
+            filename: 'upload.jpg',
+            contentType: MediaType('image', 'jpeg'),
+          ),
+        );
+      }
 
-    final response = await request.send();
-    final responseBody = await response.stream.bytesToString();
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
 
-    print('Status: ${response.statusCode}');
-    print('Body: $responseBody'); // ini akan menampilkan detail error Laravel
+      print('Status: ${response.statusCode}');
+      print('Body: $responseBody');
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      final respStr = await response.stream.bytesToString();
-      print("Create Item Error: $respStr");
+      return response.statusCode == 200;
+    } catch (e) {
+      print("Create Item Exception: $e");
       return false;
     }
   }

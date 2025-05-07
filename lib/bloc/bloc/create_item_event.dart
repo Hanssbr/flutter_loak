@@ -9,7 +9,7 @@ class CreateEvent extends CreateItemEvent {
   final String category;
   final String condition;
   final String location;
-  final File photo;
+  final dynamic photo;
   final String token;
 
   CreateEvent({
