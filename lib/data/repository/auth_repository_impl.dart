@@ -15,13 +15,15 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Map<String, dynamic>> register(
     String name,
-    String email,
+    String email, 
+    String phone, 
     String password,
     String passwordConfirmation,
   ) {
     return remoteDatasource.register(
       name: name,
       email: email,
+      phone: phone,
       password: password,
       passwordConfirmation: passwordConfirmation,
     );

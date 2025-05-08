@@ -9,9 +9,10 @@ class RegisterUseCase {
   Future<Map<String, dynamic>> call({
     required String name,
     required String email,
+    required String phone,
     required String password,
     required String passwordConfirmation,
   }) {
-    return repository.register(name, email, password, passwordConfirmation);
+    return repository.register(name, email, phone, password, passwordConfirmation);
   }
 }

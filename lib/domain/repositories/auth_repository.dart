@@ -3,6 +3,7 @@ abstract class AuthRepository {
   Future<Map<String, dynamic>> register(
     String name,
     String email,
+    String phone,
     String password,
     String passwordConfirmation,
   );

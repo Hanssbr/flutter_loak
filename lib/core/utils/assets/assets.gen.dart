@@ -14,6 +14,7 @@ class $AssetsIconsGen {
   SvgGenImage get home => SvgGenImage('assets/icons/home-03.svg');
   SvgGenImage get star => SvgGenImage('assets/icons/Icon-1.svg');
   SvgGenImage get flag => SvgGenImage('assets/icons/flag-02.svg');
+  SvgGenImage get phone => SvgGenImage('assets/icons/phone.svg');
   SvgGenImage get share => SvgGenImage('assets/icons/Icon-2.svg');
   SvgGenImage get lock => SvgGenImage('assets/icons/Icon-3.svg');
   SvgGenImage get draft => SvgGenImage('assets/icons/Icon-4.svg');
@@ -75,7 +76,7 @@ class SvgGenImage {
     );
   }
 
-    String get path => _assetName;
+  String get path => _assetName;
 
   String get keyName => _assetName;
 }

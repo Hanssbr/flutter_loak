@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
 import 'package:project_sem2/presentation/ui/pages/home_page.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lottie/lottie.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
@@ -40,6 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
         final result = await _authRemoteDatasource.register(
           name: _nameController.text,
           email: _emailController.text,
+          phone: _phoneController.text,
           password: _passwordController.text,
           passwordConfirmation: _confirmPasswordController.text,
         );
@@ -48,43 +50,45 @@ class _SignUpPageState extends State<SignUpPage> {
         await _saveToken(token);
 
         showDialog(
-  context: context,
-  barrierDismissible: false,
-  builder: (context) {
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pop();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    });
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            });
 
-    return Dialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Lottie.asset(
-              'assets/lottie/success.json',
-              width: 120,
-              height: 120,
-              repeat: false,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Akun kamu berhasil dibuat.",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-);
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Lottie.asset(
+                      'assets/lottie/success.json',
+                      width: 120,
+                      height: 120,
+                      repeat: false,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Akun kamu berhasil dibuat.",
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
       } catch (e) {
         print('Error: $e');
         ScaffoldMessenger.of(
@@ -203,6 +207,38 @@ class _SignUpPageState extends State<SignUpPage> {
                         }
                         if (!value.contains('@')) {
                           return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                        labelStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        prefixIcon: Container(
+                          padding: const EdgeInsets.all(12),
+                          child: Assets.icons.phone.svg(
+                            color: Colors.grey.shade500,
+                            width: 10,
+                            height: 10,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
                         }
                         return null;
                       },

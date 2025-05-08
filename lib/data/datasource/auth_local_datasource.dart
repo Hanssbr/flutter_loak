@@ -4,7 +4,8 @@ class AuthLocalDatasource {
   static const _keyToken = 'token';
 
   Future<void> saveToken(String token) async {
-    final sharedpreferences = await SharedPreferences.getInstance();
+    final sharedpreferences =
+        await SharedPreferences.getInstance(); // atau prefs.clear();
     await sharedpreferences.setString(_keyToken, token);
     print('[SAVE] Token: $token');
   }
@@ -24,5 +25,4 @@ class AuthLocalDatasource {
     await sharedPreferences.clear(); // Menghapus semua data
     print('[CLEAR] Semua data di SharedPreferences telah dihapus.');
   }
-  
 }
