@@ -37,6 +37,9 @@ class _FavoritPageState extends State<FavoritPage> {
           if (state is FavoritLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is FavoritLoaded) {
+            if (state.favorits.isEmpty) {
+              return const Center(child: Text("Belum ada item favorit."));
+            }
             return ListView.builder(
               itemCount: state.favorits.length,
               itemBuilder: (context, index) {
