@@ -53,4 +53,31 @@ class ItemsSource {
       print('[BODY] ${response.body}');
     }
   }
+
+  Future<Items?> itemDetails(int itemId) async {
+    final local = AuthLocalDatasource();
+    final token = await local.getToken();
+
+    String url = "https://givebox.hanssu.my.id/api/all-items/$itemId";
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    DMethod.logResponse(response);
+
+    try {
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        final data = decoded['data']; // diasumsikan single object
+        return Items.fromJson(Map<String, dynamic>.from(data));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      DMethod.log(e.toString());
+      return null;
+    }
+  }
 }

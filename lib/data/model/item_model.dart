@@ -69,6 +69,7 @@ class User {
   final int id;
   final String? name;
   final String? email;
+  final String? phone;
   final DateTime? emailVerifiedAt;
   final dynamic photo;
   final String? role;
@@ -80,6 +81,7 @@ class User {
     this.name,
     this.email,
     this.emailVerifiedAt,
+    this.phone,
     this.photo,
     this.role,
     this.createdAt,
@@ -94,6 +96,7 @@ class User {
         json["email_verified_at"] != null
             ? DateTime.parse(json["email_verified_at"])
             : null,
+    phone: json["phone"],
     photo: json["photo"],
     role: json["role"],
     createdAt:
@@ -107,6 +110,7 @@ class User {
     "name": name,
     "email": email,
     "email_verified_at": emailVerifiedAt?.toIso8601String(),
+    "phone": phone,
     "photo": photo,
     "role": role,
     "created_at": createdAt?.toIso8601String(),
