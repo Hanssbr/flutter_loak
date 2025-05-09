@@ -91,7 +91,7 @@ class _RecomendCardState extends State<RecomendCard> {
                   Text(
                     widget.recomendItems.description ?? '',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
 

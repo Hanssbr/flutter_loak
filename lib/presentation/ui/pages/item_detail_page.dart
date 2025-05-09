@@ -135,63 +135,67 @@ class ItemDetailPage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const SizedBox(
+                              height: 12,
+                            ), // Tambahkan jarak di sini
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.mail_rounded,
+                                  color: Colors.blue,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    item.status ?? '-',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 30),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: ElevatedButton.icon(
-                    //     onPressed: () {
-                    //       // aksi favorit
-                    //     },
-                    //     icon: const Icon(Icons.favorite_outline),
-                    //     label: const Text("Chat pemilik barang"),
-                    //     style: ElevatedButton.styleFrom(
-                    //       backgroundColor: Colors.green,
-                    //       foregroundColor: Colors.white,
-                    //       padding: const EdgeInsets.symmetric(vertical: 16),
-                    //       textStyle: const TextStyle(
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(14),
-                    //       ),
-                    //       elevation: 4,
-                    //     ),
-                    //   ),
-                    // ),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          final phoneNumber =
-                              item.user?.phone; // Akses nomor telepon pengguna
-                          if (phoneNumber != null && phoneNumber.isNotEmpty) {
-                            final whatsappUrl =
-                                'https://wa.me/$phoneNumber'; // Format link WhatsApp
-                            try {
-                              launchUrl(
-                                Uri.parse(whatsappUrl),
-                              ); // Meluncurkan WhatsApp
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Tidak dapat membuka WhatsApp"),
-                                ),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Nomor WhatsApp tidak tersedia"),
-                              ),
-                            );
-                          }
-                        },
+                        onPressed:
+                            item.status?.toLowerCase() == 'available'
+                                ? () {
+                                  final phoneNumber = item.user?.phone;
+                                  if (phoneNumber != null &&
+                                      phoneNumber.isNotEmpty) {
+                                    final whatsappUrl =
+                                        'https://wa.me/$phoneNumber';
+                                    try {
+                                      launchUrl(Uri.parse(whatsappUrl));
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Tidak dapat membuka WhatsApp",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Nomor WhatsApp tidak tersedia",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                                : null, // Tombol akan disable jika status bukan "available"
+
                         icon: const Icon(Icons.chat_bubble_outline),
                         label: const Text("Hubungi Pemilik Barang"),
                         style: ElevatedButton.styleFrom(
@@ -209,6 +213,15 @@ class ItemDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    if (item.status?.toLowerCase() != 'available')
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Barang tidak tersedia',
+                          style: TextStyle(color: Colors.redAccent),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                   ],
                 ),
               );

@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
+import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
+import 'package:project_sem2/data/model/user_model.dart';
 import 'package:project_sem2/domain/entities/user_entity.dart';
 import 'package:project_sem2/domain/usecases/login_usecase.dart';
 import 'package:project_sem2/domain/usecases/logout_usecase.dart';
@@ -13,12 +15,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LogoutUsecase logoutUseCase;
   final RegisterUseCase registerUseCase;
   final AuthLocalDatasource authLocalDatasource;
+  final AuthRemoteDatasource authRemoteDatasource;
 
   AuthBloc(
     this.loginUseCase,
     this.logoutUseCase,
     this.registerUseCase,
     this.authLocalDatasource,
+    this.authRemoteDatasource,
   ) : super(AuthInitial()) {
     on<LoginEvent>((event, emit) async {
       emit(AuthLoading());
@@ -57,6 +61,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authLocalDatasource.saveToken(result['token']);
         emit(AuthSuccess(result['user'], result['token']));
       } catch (e) {
+        emit(AuthFailure(e.toString()));
+      }
+    });
+
+    on<FetchCurrentUser>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final token = await authLocalDatasource.getToken();
+        if (token == null) throw Exception('Token tidak ditemukan');
+        final user = await authRemoteDatasource.getCurrentUser(token);
+        emit(AuthLoaded(user));
+      } catch (e) {
+        await authLocalDatasource.clearToken(); // hapus token jika error
         emit(AuthFailure(e.toString()));
       }
     });

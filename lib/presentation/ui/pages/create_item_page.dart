@@ -15,6 +15,17 @@ class CreateItemPage extends StatefulWidget {
 }
 
 class _CreateItemPageState extends State<CreateItemPage> {
+  final List<String> categories = [
+    'elektronik',
+    'pakaian',
+    'buku',
+    'mainan',
+    'lainnya',
+  ];
+  final List<String> conditions = ['layak', 'rusak ringan', 'rusak berat'];
+
+  String? selectedCategory;
+  String? selectedCondition;
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
@@ -73,9 +84,13 @@ class _CreateItemPageState extends State<CreateItemPage> {
 
           if (state is CreateItemSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Item berhasil ditambahkan!')),
+              const SnackBar(
+                content: Text('Item berhasil ditambahkan!'),
+                behavior: SnackBarBehavior.floating, // ← Ini kuncinya
+                margin: EdgeInsets.all(16),
+              ),
             );
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
 
           if (state is CreateItemError) {
@@ -93,8 +108,52 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 children: [
                   _buildField('Nama Barang', nameController),
                   _buildField('Deskripsi', descriptionController),
-                  _buildField('Kategori', categoryController),
-                  _buildField('Kondisi', conditionController),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Kategori',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedCategory,
+                    items:
+                        categories.map((cat) {
+                          return DropdownMenuItem(value: cat, child: Text(cat));
+                        }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCategory = value!;
+                        categoryController.text = value;
+                      });
+                    },
+                    validator:
+                        (value) => value == null ? 'Pilih kategori' : null,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Kondisi',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedCondition,
+                    items:
+                        conditions.map((cond) {
+                          return DropdownMenuItem(
+                            value: cond,
+                            child: Text(cond),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCondition = value!;
+                        conditionController.text = value;
+                      });
+                    },
+                    validator:
+                        (value) => value == null ? 'Pilih kondisi' : null,
+                  ),
+
+                  const SizedBox(height: 16),
                   _buildField('Lokasi', locationController),
                   const SizedBox(height: 16),
                   GestureDetector(

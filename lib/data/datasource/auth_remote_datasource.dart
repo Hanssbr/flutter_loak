@@ -5,7 +5,12 @@ import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
 import 'package:project_sem2/data/model/user_model.dart';
 
 class AuthRemoteDatasource {
+  final http.Client client;
   final AuthLocalDatasource _local = AuthLocalDatasource();
+
+  AuthRemoteDatasource({http.Client? client})
+    : client = client ?? http.Client();
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('https://givebox.hanssu.my.id/api/login'),
@@ -58,9 +63,9 @@ class AuthRemoteDatasource {
     );
 
     if (response.statusCode == 200) {
-      await _local.clearAll();
+      await _local.clearToken();
     } else {
-      await _local.clearAll();
+      await _local.clearToken();
       throw Exception('Logout gagal');
     }
   }
@@ -97,6 +102,20 @@ class AuthRemoteDatasource {
       };
     } else {
       throw Exception(data['message'] ?? 'Failed to register.');
+    }
+  }
+
+  Future<UserModel> getCurrentUser(String token) async {
+    final response = await client.get(
+      Uri.parse('https://givebox.hanssu.my.id/api/user'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception('Gagal mengambil user: ${response.body}');
     }
   }
 }

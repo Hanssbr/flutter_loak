@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_sem2/bloc/get_item_bloc.dart';
 import 'package:project_sem2/presentation/ui/pages/create_item_page.dart';
 import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
@@ -39,8 +40,8 @@ class _HomePageState extends State<HomePage> {
       body: _pages[_selectedIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
             MaterialPageRoute(
               builder:
                   (context) => BlocProvider(
@@ -49,13 +50,18 @@ class _HomePageState extends State<HomePage> {
                   ),
             ),
           );
-        },
 
+          if (result == true) {
+            // Refresh data jika produk berhasil dibuat
+            context.read<GetItemBloc>().add(OnGetItem());
+          }
+        },
         backgroundColor: AppColors.greenLime,
         elevation: 0,
         shape: const CircleBorder(),
         child: Assets.icons.add.svg(width: 24, height: 24, color: Colors.white),
       ),
+
       bottomNavigationBar: BottomAppBar(
         height: 70,
         color: Colors.white,

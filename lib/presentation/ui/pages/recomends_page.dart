@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/item_detail_page.dart';
 
 import '../bloc/recomends_bloc.dart';
 import '../models/custom_appbar.dart';
@@ -23,17 +24,36 @@ class _RecommendationPageState extends State<RecommendationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ModernAppBar(title: 'Recommendations', showBackButton: true),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: ModernAppBar(),
+      ),
       body: BlocBuilder<RecomendsBloc, RecomendsState>(
         builder: (context, state) {
           if (state is RecomendsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is RecomendsLoaded) {
-            print(state.recomendsItems);
-            return ListView.builder(
+            return GridView.builder(
               itemCount: state.recomendsItems.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 2,
+                childAspectRatio: 0.65,
+              ),
               itemBuilder: (context, index) {
-                return RecomendCard(recomendItems: state.recomendsItems[index]);
+                final item = state.recomendsItems[index];
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ItemDetailPage(itemId: item.id),
+                      ),
+                    );
+                  },
+                  child: RecomendCard(recomendItems: item),
+                );
               },
             );
           } else {

@@ -19,3 +19,8 @@ class AuthFailure extends AuthState {
 }
 
 class AuthLogout extends AuthState {}
+
+class AuthLoaded extends AuthState {
+  final UserModel user;
+  AuthLoaded(this.user);
+}

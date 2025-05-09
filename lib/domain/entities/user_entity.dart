@@ -3,6 +3,7 @@ class UserEntity {
   final String name;
   final String email;
   final String? phone;
+  final String? photo;
   final String role;
 
   UserEntity({
@@ -10,6 +11,7 @@ class UserEntity {
     required this.name,
     required this.email,
     this.phone,
+    this.photo,
     required this.role,
   });
 }

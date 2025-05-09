@@ -20,7 +20,7 @@ class AuthLocalDatasource {
   //   await sharedPreferences.remove(_keyToken);
   // }
 
-  Future<void> clearAll() async {
+  Future<void> clearToken() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.clear(); // Menghapus semua data
     print('[CLEAR] Semua data di SharedPreferences telah dihapus.');

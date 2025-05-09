@@ -107,6 +107,7 @@ class MyApp extends StatelessWidget {
                 LogoutUsecase(AuthRemoteDatasource()),
                 RegisterUseCase(AuthRepositoryImpl(AuthRemoteDatasource())),
                 AuthLocalDatasource(),
+                AuthRemoteDatasource(),
               ),
         ),
 
