@@ -141,9 +141,16 @@ class ItemDetailPage extends StatelessWidget {
                             const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.mail_rounded,
-                                  color: Colors.blue,
+                                Icon(
+                                  item.status == 'available'
+                                      ? Icons.event_available
+                                      : Icons
+                                          .event_busy, // Pilih ikon sesuai status
+                                  color:
+                                      item.status == 'available'
+                                          ? Colors.blue
+                                          : Colors
+                                              .red, // Warna biru jika available, merah jika unavailable
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
