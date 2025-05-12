@@ -220,6 +220,33 @@ class ItemDetailPage extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 16), // Tambahkan jarak antara tombol
+                    // Tombol untuk mengubah status ke unavailable
+                    if (item.status?.toLowerCase() == 'available') ...[
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          context.read<ItemDetailsBloc>().add(
+                            UpdateItemStatus(item.id, 'unavailable'),
+                          );
+                        },
+                        icon: const Icon(Icons.cancel),
+                        label: const Text("Tandai sebagai Tidak Tersedia"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ],
+
                     if (item.status?.toLowerCase() != 'available')
                       const Padding(
                         padding: EdgeInsets.only(top: 8.0),

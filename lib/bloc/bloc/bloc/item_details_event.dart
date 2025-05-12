@@ -8,4 +8,10 @@ class Getdetails extends ItemDetailsEvent {
   Getdetails(this.id);
 }
 
+class UpdateItemStatus extends ItemDetailsEvent {
+  final int itemId;
+  final String newStatus;
+
+  UpdateItemStatus(this.itemId, this.newStatus); // Pastikan ini seperti ini
+}
 

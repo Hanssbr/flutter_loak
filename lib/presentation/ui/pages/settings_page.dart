@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
+import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -26,9 +27,15 @@ class SettingsPage extends StatelessWidget {
             _buildSettingItem(
               context,
               icon: Icons.notifications_outlined,
-              title: 'Notifications',
-              onTap: () {},
+              title: 'My Items',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyItemPage()),
+                );
+              },
             ),
+
             _buildSettingItem(
               context,
               icon: Icons.star_border,

@@ -12,9 +12,12 @@ import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
 import 'package:project_sem2/presentation/ui/bloc/bloc/favorit_bloc.dart';
 import 'package:project_sem2/presentation/ui/bloc/recomends_bloc.dart';
 import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
+import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
 import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
+
+import 'bloc/bloc/bloc/bloc/my_item_bloc.dart';
 
 void main() {
   runApp(
@@ -134,6 +137,10 @@ class MyApp extends StatelessWidget {
             return favoritBloc;
           },
           child: const FavoritPage(),
+        ),
+        BlocProvider(
+          create: (context) => MyItemBloc()..add(GetMyItems()),
+          child: const MyItemPage(),
         ),
       ],
       child: MaterialApp(

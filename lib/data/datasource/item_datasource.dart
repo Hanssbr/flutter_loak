@@ -4,6 +4,7 @@ import 'package:d_method/d_method.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
 import 'package:project_sem2/data/model/item_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemsSource {
   static Future<List<Items>?> getItems() async {
@@ -78,6 +79,28 @@ class ItemsSource {
     } catch (e) {
       DMethod.log(e.toString());
       return null;
+    }
+  }
+
+  Future<Items> updateItemStatus(int id, String newStatus) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token'); // Pastikan token tersedia
+
+    final response = await http.put(
+      Uri.parse('https://givebox.hanssu.my.id/api/my-items/$id/status'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token', // Tambahkan token jika diperlukan
+      },
+      body: jsonEncode({'status': newStatus}),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      print('Response Data: $responseData'); // Debugging print
+      return Items.fromJson(responseData['data']);
+    } else {
+      throw Exception('Gagal update status. Code: ${response.statusCode}');
     }
   }
 }

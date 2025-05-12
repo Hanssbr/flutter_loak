@@ -16,3 +16,7 @@ final class ItemDetailsFailure extends ItemDetailsState {
   final String message;
   ItemDetailsFailure(this.message);
 }
+
+class ItemStatusUpdating extends ItemDetailsState {}
+
+class ItemStatusUpdated extends ItemDetailsState {}

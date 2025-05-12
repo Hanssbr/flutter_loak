@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_sem2/bloc/get_item_bloc.dart';
 import 'package:project_sem2/data/model/item_model.dart';
+import 'package:project_sem2/presentation/ui/models/product_appbar.dart';
 import 'package:project_sem2/presentation/ui/widgets/product_card.dart';
+
+
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -24,24 +27,26 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Daftar Produk"),
-        actions: [
-          IconButton(
-            icon: Icon(_isGrid ? Icons.list : Icons.grid_view),
-            onPressed: () {
-              setState(() {
-                _isGrid = !_isGrid;
-              });
-            },
-          ),
-        ],
+      appBar: ProductAppBar(
+        onSearch: (keyword) {
+          context.read<GetItemBloc>().add(SearchItem(keyword: keyword));
+        },
+        isGrid: _isGrid,
+        onToggleGrid: () {
+          setState(() {
+            _isGrid = !_isGrid;
+          });
+        },
       ),
       body: BlocBuilder<GetItemBloc, GetItemState>(
         builder: (context, state) {
           if (state is GetItemLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetItemLoaded) {
+            if (state.items.isEmpty) {
+              return const Center(child: Text('Tidak ada produk ditemukan'));
+            }
+
             return _isGrid ? _buildGrid(state.items) : _buildList(state.items);
           } else {
             return const Center(child: Text('Gagal memuat produk.'));
