@@ -145,48 +145,6 @@ class _MyItemCardState extends State<MyitemCard> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          widget.myItems.description ?? '',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.category,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.myItems.category ?? '',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.myItems.location ?? '',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 16),
 
                         // Update Status Button
@@ -197,13 +155,16 @@ class _MyItemCardState extends State<MyitemCard> {
                                 widget.myItems.status == "available"
                                     ? Colors.red
                                     : Colors.green,
-                            foregroundColor:
-                                Colors.white, // Menambahkan warna teks putih
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
+                            ), // Menambahkan warna teks putih
                           ),
                           child: Text(
                             widget.myItems.status == "available"
-                                ? "Tandai Tidak Tersedia"
-                                : "Tandai Tersedia",
+                                ? "Unavailable"
+                                : "Available",
                             style: TextStyle(
                               color: Colors.white,
                             ), // Menambahkan warna teks putih di sini jika perlu
