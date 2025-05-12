@@ -10,4 +10,9 @@ class DeleteMyItem extends MyItemEvent {
   DeleteMyItem(this.itemId);
 }
 
+class UpdateItemStatus extends MyItemEvent {
+  final String itemId;
+  final String status; // "available" or "unavailable"
 
+  UpdateItemStatus({required this.itemId, required this.status});
+}

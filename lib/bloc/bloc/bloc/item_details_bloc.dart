@@ -10,7 +10,6 @@ part 'item_details_state.dart';
 class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
   ItemDetailsBloc() : super(ItemDetailsInitial()) {
     on<Getdetails>(_onGetDetails);
-    on<UpdateItemStatus>(_onUpdateItemStatus);
   }
 
   Future<void> _onGetDetails(
@@ -32,19 +31,5 @@ class ItemDetailsBloc extends Bloc<ItemDetailsEvent, ItemDetailsState> {
     }
   }
 
-  Future<void> _onUpdateItemStatus(
-    UpdateItemStatus event,
-    Emitter<ItemDetailsState> emit,
-  ) async {
-    emit(ItemStatusUpdating());
-    try {
-      final updatedItem = await ItemsSource().updateItemStatus(
-        event.itemId,
-        event.newStatus,
-      );
-      emit(ItemDetailsLoaded(updatedItem));
-    } catch (e) {
-      emit(ItemDetailsFailure('Gagal mengubah status: $e'));
-    }
-  }
+
 }

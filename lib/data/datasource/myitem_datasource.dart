@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
 
@@ -6,7 +7,7 @@ import '../model/myitem_model.dart';
 
 class MyItemDatasource {
   static Future<List<MyItems>?> getMyItems() async {
-    final token = await AuthLocalDatasource().getToken(); // Ambil token login
+    final token = await AuthLocalDatasource().getToken();
     final url = Uri.parse('https://givebox.hanssu.my.id/api/my-items');
 
     try {
@@ -56,6 +57,28 @@ class MyItemDatasource {
     } catch (e) {
       print('Error saat menghapus item: $e');
       return false;
+    }
+  }
+
+  static Future<MyItems?> updateItemStatus(int id, String newStatus) async {
+    final token = await AuthLocalDatasource().getToken();
+
+    final response = await http.put(
+      Uri.parse('https://givebox.hanssu.my.id/api/my-items/$id/status'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'status': newStatus}),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      print('Response Data: $responseData');
+      return MyItems.fromJson(responseData['data']);
+    } else {
+      print('Gagal update status. Code: ${response.statusCode}');
+      return null;
     }
   }
 }

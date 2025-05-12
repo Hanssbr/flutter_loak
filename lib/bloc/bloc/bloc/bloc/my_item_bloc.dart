@@ -24,7 +24,6 @@ class MyItemBloc extends Bloc<MyItemEvent, MyItemState> {
       final success = await MyItemDatasource.deleteMyItem(event.itemId);
 
       if (success) {
-        // Setelah hapus, ambil ulang list terbaru
         final result = await MyItemDatasource.getMyItems();
         if (result == null) {
           emit(
@@ -35,6 +34,25 @@ class MyItemBloc extends Bloc<MyItemEvent, MyItemState> {
         }
       } else {
         emit(MyItemFailure('Gagal menghapus item.'));
+      }
+    });
+
+    on<UpdateItemStatus>((event, emit) async {
+      emit(MyItemLoading());
+      final updatedItem = await MyItemDatasource.updateItemStatus(
+        int.parse(event.itemId), // Pastikan itemId diubah ke int
+        event.status,
+      );
+
+      if (updatedItem != null) {
+        final result = await MyItemDatasource.getMyItems();
+        if (result == null) {
+          emit(MyItemFailure('Gagal memuat ulang data setelah update.'));
+        } else {
+          emit(MyItemLoaded(result));
+        }
+      } else {
+        emit(MyItemFailure('Gagal mengubah status item.'));
       }
     });
   }

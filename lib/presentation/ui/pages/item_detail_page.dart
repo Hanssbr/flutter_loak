@@ -34,6 +34,7 @@ class ItemDetailPage extends StatelessWidget {
 
             if (state is ItemDetailsLoaded) {
               final Items item = state.item;
+              
 
               return Padding(
                 padding: const EdgeInsets.all(16.0),
