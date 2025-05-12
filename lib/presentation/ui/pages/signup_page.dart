@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
+import 'package:project_sem2/presentation/ui/models/signup_appbar.dart';
 import 'package:project_sem2/presentation/ui/pages/home_page.dart';
-import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -25,7 +25,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  bool _agreeToTerms = false;
   bool _isLoading = false;
 
   Future<void> _saveToken(String token) async {
@@ -110,6 +109,10 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: SignupAppbar(),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -117,29 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
-              Center(
-                child: Assets.icons.logo.svg(
-                  height: 48,
-                  color: Colors.blueAccent,
-                ),
-              ),
               const SizedBox(height: 48),
-              Text(
-                'Create Account',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Join our community today',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: Colors.grey.shade600),
-              ),
-              const SizedBox(height: 40),
               Form(
                 key: _formKey,
                 child: Column(
@@ -343,40 +324,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _agreeToTerms,
-                          onChanged: (value) {
-                            setState(() => _agreeToTerms = value!);
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          activeColor: Colors.blueAccent,
-                        ),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'I agree to the ',
-                              style: TextStyle(color: Colors.grey.shade700),
-                              children: [
-                                TextSpan(
-                                  text: 'Terms of Service ',
-                                  style: TextStyle(color: Colors.blueAccent),
-                                ),
-                                TextSpan(text: 'and '),
-                                TextSpan(
-                                  text: 'Privacy Policy',
-                                  style: TextStyle(color: Colors.blueAccent),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
@@ -412,33 +359,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
-                            ),
-                          );
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Already have an account? ',
-                            style: TextStyle(color: Colors.grey.shade600),
-                            children: [
-                              TextSpan(
-                                text: 'Login',
-                                style: TextStyle(
-                                  color: Colors.blueAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

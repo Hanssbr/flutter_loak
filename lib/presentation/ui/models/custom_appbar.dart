@@ -51,16 +51,9 @@ class _ModernAppBarState extends State<ModernAppBar> {
                     Text(
                       'Good Morning,\n${user.name}!',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black38,
-                            blurRadius: 4,
-                            offset: Offset(1, 1),
-                          ),
-                        ],
                       ),
                     ),
                   ],

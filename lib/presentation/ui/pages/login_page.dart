@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
+import 'package:project_sem2/presentation/ui/models/login_appbar.dart';
 import 'package:project_sem2/presentation/ui/pages/home_page.dart';
 
 import '../../../core/utils/core.dart';
@@ -20,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   bool isLoading = false;
   bool _obscurePassword = true;
-  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -76,6 +76,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: LoginAppbar(),
+      ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
@@ -93,29 +97,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
-                  Center(
-                    child: Assets.icons.logo.svg(
-                      height: 48,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-
-                  const SizedBox(height: 48),
-                  Text(
-                    'Welcome',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Login to continue to your account',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
                   const SizedBox(height: 40),
                   Form(
                     key: _formKey,
@@ -210,38 +191,6 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: _rememberMe,
-                                  onChanged: (value) {
-                                    setState(() => _rememberMe = value!);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  activeColor: Colors.blueAccent,
-                                ),
-                                Text(
-                                  'Remember me',
-                                  style: TextStyle(color: Colors.grey.shade700),
-                                ),
-                              ],
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Forgot password
-                              },
-                              child: Text(
-                                'Forgot password?',
-                                style: TextStyle(color: Colors.blueAccent),
-                              ),
-                            ),
-                          ],
-                        ),
                         const SizedBox(height: 24),
 
                         // state is AuthLoading
