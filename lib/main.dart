@@ -15,7 +15,7 @@ import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
 import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
 import 'package:project_sem2/presentation/ui/pages/product_page.dart';
 import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
-import 'package:project_sem2/presentation/ui/pages/signup_page.dart';
+import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
 
 import 'bloc/bloc/bloc/bloc/my_item_bloc.dart';
 
@@ -164,7 +164,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SignUpPage(),
+        home: const SplashPage(),
         debugShowCheckedModeBanner: false,
       ),
     );

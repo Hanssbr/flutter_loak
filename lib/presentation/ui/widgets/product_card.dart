@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/datasource/favorit_datasource.dart';
 import 'package:project_sem2/data/datasource/favorite_local_datasource.dart';
 import 'package:project_sem2/data/model/item_model.dart';
@@ -116,9 +118,12 @@ class _ProductCardState extends State<ProductCard> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          isFavorited ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.red,
+                        child: SvgPicture.asset(
+                          isFavorited
+                              ? Assets.icons.favorite.path
+                              : Assets.icons.unfavorite.path,
+                          width: 24,
+                          height: 24,
                         ),
                       ),
                     ),

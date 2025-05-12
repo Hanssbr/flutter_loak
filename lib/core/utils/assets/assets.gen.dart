@@ -26,6 +26,8 @@ class $AssetsIconsGen {
   SvgGenImage get add => SvgGenImage('assets/icons/Vector.svg');
   SvgGenImage get user => SvgGenImage('assets/icons/user-circle.svg');
   SvgGenImage get background => SvgGenImage('assets/icons/Announcement.svg');
+  SvgGenImage get favorite => SvgGenImage('assets/icons/favorite.svg');
+  SvgGenImage get unfavorite => SvgGenImage('assets/icons/unfavorite.svg');
 }
 
 class SvgGenImage {
