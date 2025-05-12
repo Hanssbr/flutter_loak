@@ -1,148 +1,173 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_sem2/core/utils/core.dart';
+import 'package:project_sem2/bloc/get_item_bloc.dart';
+import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
+import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
+import 'package:project_sem2/data/repository/auth_repository_impl.dart';
+import 'package:project_sem2/domain/usecases/login_usecase.dart';
+import 'package:project_sem2/domain/usecases/logout_usecase.dart';
+import 'package:project_sem2/domain/usecases/register_usecase.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
-import 'package:project_sem2/presentation/ui/pages/login_page.dart';
+import 'package:project_sem2/presentation/ui/bloc/bloc/favorit_bloc.dart';
+import 'package:project_sem2/presentation/ui/bloc/recomends_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/favorit_page.dart';
 import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
+import 'package:project_sem2/presentation/ui/pages/product_page.dart';
+import 'package:project_sem2/presentation/ui/pages/recomends_page.dart';
+import 'package:project_sem2/presentation/ui/pages/splash_page.dart';
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+import 'bloc/bloc/bloc/bloc/my_item_bloc.dart';
+
+void main() {
+  runApp(
+    DevicePreview(
+      // White background looks professional in website embedding
+      backgroundColor: Colors.white,
+
+      // Enable preview by default for web demo
+      enabled: true,
+
+      // Start with Galaxy A50 as it's a common Android device
+      defaultDevice: Devices.ios.iPhone13ProMax,
+
+      // Show toolbar to let users test different devices
+      isToolbarVisible: true,
+
+      // Keep English only to avoid confusion in demos
+      availableLocales: [Locale('en', 'US')],
+
+      // Customize preview controls
+      tools: const [
+        // Device selection controls
+        DeviceSection(
+          model: true, // Option to change device model to fit your needs
+          orientation: false, // Lock to portrait for consistent demo
+          frameVisibility: false, // Hide frame options
+          virtualKeyboard: false, // Hide keyboard
+        ),
+
+        // Theme switching section
+        // SystemSection(
+        //   locale: false, // Hide language options - we're keeping it English only
+        //   theme: false, // Show theme switcher if your app has dark/light modes
+        // ),
+
+        // Disable accessibility for demo simplicity
+        // AccessibilitySection(
+        //   boldText: false,
+        //   invertColors: false,
+        //   textScalingFactor: false,
+        //   accessibleNavigation: false,
+        // ),
+
+        // Hide extra settings to keep demo focused
+        // SettingsSection(
+        //   backgroundTheme: false,
+        //   toolsTheme: false,
+        // ),
+      ],
+
+      // Curated list of devices for comprehensive preview
+      devices: [
+        // ... Devices.all, // uncomment to see all devices
+
+        // Popular Android Devices
+        Devices.android.samsungGalaxyA50, // Mid-range
+        Devices.android.samsungGalaxyNote20, // Large screen
+        Devices.android.samsungGalaxyS20, // Flagship
+        Devices.android.samsungGalaxyNote20Ultra, // Premium
+        Devices.android.onePlus8Pro, // Different aspect ratio
+        Devices.android.sonyXperia1II, // Tall screen
+        // Popular iOS Devices
+        Devices.ios.iPhoneSE, // Small screen
+        Devices.ios.iPhone12, // Standard size
+        Devices.ios.iPhone12Mini, // Compact
+        Devices.ios.iPhone12ProMax, // Large
+        Devices.ios.iPhone13, // Latest standard
+        Devices.ios.iPhone13ProMax, // Latest large
+        Devices.ios.iPhone13Mini, // Latest compact
+        Devices.ios.iPhoneSE, // Budget option
+      ],
+
+      /// Your app's entry point
+      builder: (context) => const MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLogout) {
-          context.pushAndRemoveUntil(const LoginPage(), (route) => false);
-        } else if (state is AuthFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
-        }
-      },
-      child: Scaffold(
-        body: ListView(
-          children: [
-            const SizedBox(height: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.notifications_outlined,
-              title: 'My Items',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyItemPage()),
-                );
-              },
-            ),
-
-            _buildSettingItem(
-              context,
-              icon: Icons.star_border,
-              title: 'Rate App',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.share_outlined,
-              title: 'Share App',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.privacy_tip_outlined,
-              title: 'Privacy Policy',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.description_outlined,
-              title: 'Terms and Conditions',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.email_outlined,
-              title: 'Contact Us',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.feedback_outlined,
-              title: 'Feedback',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.logout,
-              title: 'Logout',
-              color: Colors.redAccent,
-              onTap: () => _showLogoutDialog(context),
-            ),
-            const SizedBox(height: 20),
-          ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) => AuthBloc(
+                LoginUseCase(AuthRepositoryImpl(AuthRemoteDatasource())),
+                LogoutUsecase(AuthRemoteDatasource()),
+                RegisterUseCase(AuthRepositoryImpl(AuthRemoteDatasource())),
+                AuthLocalDatasource(),
+                AuthRemoteDatasource(),
+              ),
         ),
-        backgroundColor: const Color(0xFFF9F9F9),
-      ),
-    );
-  }
 
-  Widget _buildSettingItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    Color color = Colors.black87,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: color.withOpacity(0.1),
-        child: Icon(icon, color: color),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(color: color, fontWeight: FontWeight.w500),
-      ),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    );
-  }
+        BlocProvider(
+          create: (context) => GetItemBloc()..add(OnGetItem()),
+          child: const ProductPage(),
+        ),
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+        BlocProvider(
+          create: (context) => RecomendsBloc()..add(OnGetRecomends()),
+          child: const RecommendationPage(),
+        ),
+        BlocProvider(
+          create: (context) {
+            final favoritBloc = FavoritBloc();
+            AuthLocalDatasource().getToken().then((token) {
+              if (token != null) {
+                favoritBloc.add(LoadFavorit(token: token));
+              } else {
+                // Bisa kasih handling kalau token null
+                print('Token tidak ditemukan');
+              }
+            });
+            return favoritBloc;
+          },
+          child: const FavoritPage(),
+        ),
+        BlocProvider(
+          create: (context) => MyItemBloc()..add(GetMyItems()),
+          child: const MyItemPage(),
+        ),
+
+      ],
+      child: MaterialApp(
+        title: 'Aplikasi Saya',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
             ),
-            title: const Text(
-              'Logout',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            content: const Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  context.read<AuthBloc>().add(LogoutEvent());
-                },
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
           ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+        home: const SplashPage(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
