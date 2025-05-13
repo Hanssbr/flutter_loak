@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../bloc/bloc/create_item_bloc.dart';
 import '../../../data/datasource/auth_local_datasource.dart';
@@ -48,6 +51,74 @@ class _CreateItemPageState extends State<CreateItemPage> {
       setState(() {
         _imageBytes = result.files.single.bytes;
       });
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Layanan lokasi tidak aktif')),
+      );
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Izin lokasi ditolak')));
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Izin lokasi ditolak permanen')),
+      );
+      return;
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Gunakan Nominatim untuk reverse geocoding
+      final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.latitude}&lon=${position.longitude}',
+      );
+
+      final response = await http.get(
+        url,
+        headers: {
+          'User-Agent': 'flutter-app', // wajib diisi oleh Nominatim
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final address = data['display_name'];
+
+        setState(() {
+          locationController.text = address ?? '';
+        });
+
+        print('Lokasi berhasil: $address');
+      } else {
+        throw Exception('Gagal mendapatkan alamat dari Nominatim');
+      }
+    } catch (e, stacktrace) {
+      print('Terjadi error saat konversi lokasi: $e');
+      print(stacktrace);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal konversi lokasi: $e')));
     }
   }
 
@@ -154,7 +225,30 @@ class _CreateItemPageState extends State<CreateItemPage> {
                   ),
 
                   const SizedBox(height: 16),
-                  _buildField('Lokasi', locationController),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: locationController,
+                          decoration: const InputDecoration(
+                            labelText: 'Lokasi',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Lokasi wajib diisi'
+                                      : null,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.my_location),
+                        tooltip: 'Gunakan lokasi sekarang',
+                        onPressed: getCurrentLocation,
+                      ),
+                    ],
+                  ),
+
                   const SizedBox(height: 16),
                   GestureDetector(
                     onTap: _pickImage,
