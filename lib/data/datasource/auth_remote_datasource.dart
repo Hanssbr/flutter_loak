@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
 import 'package:project_sem2/data/model/user_model.dart';
 
@@ -116,6 +118,47 @@ class AuthRemoteDatasource {
       return UserModel.fromJson(data);
     } else {
       throw Exception('Gagal mengambil user: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateProfile({
+    required String token,
+    required String name,
+    required String email,
+    required String phone,
+    Uint8List? photoBytes,
+    String? photoFilename,
+  }) async {
+    var uri = Uri.parse('https://givebox.hanssu.my.id/api/profile/update');
+
+    var request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+    request.fields['name'] = name;
+    request.fields['email'] = email;
+    request.fields['phone'] = phone;
+
+    if (photoBytes != null && photoFilename != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'photo', // nama field yang diterima backend
+          photoBytes,
+          filename: photoFilename,
+          contentType: MediaType(
+            'image',
+            'jpeg',
+          ), // import dari package:http_parser/http_parser.dart
+        ),
+      );
+    }
+
+    final streamedResponse = await request.send();
+    final responseBody = await streamedResponse.stream.bytesToString();
+    final decoded = jsonDecode(responseBody);
+
+    if (streamedResponse.statusCode == 200) {
+      return decoded;
+    } else {
+      throw Exception(decoded['message'] ?? 'Gagal update profil');
     }
   }
 }

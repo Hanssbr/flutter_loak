@@ -28,3 +28,19 @@ class RegisterEvent extends AuthEvent {
 class LogoutEvent extends AuthEvent {}
 
 class FetchCurrentUser extends AuthEvent {}
+
+class UpdateProfile extends AuthEvent {
+  final String name;
+  final String email;
+  final String phone;
+  final Uint8List? photo;
+  final String? photoFilename;
+
+  UpdateProfile({
+    required this.name,
+    required this.email,
+    required this.phone,
+    this.photo,
+    this.photoFilename,
+  });
+}

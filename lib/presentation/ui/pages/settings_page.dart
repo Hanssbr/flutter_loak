@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_sem2/core/utils/core.dart';
+import 'package:project_sem2/data/model/user_model.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
+import 'package:project_sem2/presentation/ui/pages/profile_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -22,69 +24,105 @@ class SettingsPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: ListView(
-          children: [
-            const SizedBox(height: 16),
-            _buildSettingItem(
-              context,
-              icon: Assets.icons.box.path,
-              title: 'My Items',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyItemPage()),
-                );
-              },
-            ),
+        body: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            UserModel? user;
 
-            _buildSettingItem(
-              context,
-              icon: Icons.star_border,
-              title: 'Rate App',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.share_outlined,
-              title: 'Share App',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.privacy_tip_outlined,
-              title: 'Privacy Policy',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.description_outlined,
-              title: 'Terms and Conditions',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.email_outlined,
-              title: 'Contact Us',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              context,
-              icon: Icons.feedback_outlined,
-              title: 'Feedback',
-              onTap: () {},
-            ),
-            const Divider(indent: 16, endIndent: 16),
-            _buildSettingItem(
-              context,
-              icon: Icons.logout,
-              title: 'Logout',
-              color: Colors.redAccent,
-              onTap: () => _showLogoutDialog(context),
-            ),
-            const SizedBox(height: 20),
-          ],
+            if (state is AuthSuccess) {
+              user = state.user;
+            } else if (state is AuthLoaded) {
+              user = state.user;
+            }
+
+            return ListView(
+              children: [
+                _buildSettingItem(
+                  context,
+                  icon: Assets.icons.box.path,
+                  title: 'My Items',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyItemPage(),
+                      ),
+                    );
+                  },
+                ),
+                _buildSettingItem(
+                  context,
+                  icon: Assets.icons.user.path,
+                  title: 'My Profile',
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => UpdateProfilePage(
+                              initialName: user?.name ?? '',
+                              initialEmail: user?.email ?? '',
+                              initialPhone: user?.phone ?? '',
+                              initialPhotoUrl: user?.photoUrl,
+                            ),
+                      ),
+                    );
+
+                    if (result == true) {
+                      context.read<AuthBloc>().add(FetchCurrentUser());
+                    }
+                  },
+                ),
+
+                _buildSettingItem(
+                  context,
+                  icon: Icons.star_border,
+                  title: 'Rate App',
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.share_outlined,
+                  title: 'Share App',
+                  onTap: () {},
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.privacy_tip_outlined,
+                  title: 'Privacy Policy',
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.description_outlined,
+                  title: 'Terms and Conditions',
+                  onTap: () {},
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.email_outlined,
+                  title: 'Contact Us',
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.feedback_outlined,
+                  title: 'Feedback',
+                  onTap: () {},
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                _buildSettingItem(
+                  context,
+                  icon: Icons.logout,
+                  title: 'Logout',
+                  color: Colors.redAccent,
+                  onTap: () => _showLogoutDialog(context),
+                ),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
         ),
         backgroundColor: const Color(0xFFF9F9F9),
       ),
@@ -93,7 +131,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildSettingItem(
     BuildContext context, {
-    required dynamic icon, // Bisa menerima IconData atau String (untuk gambar)
+    required dynamic icon,
     required String title,
     required VoidCallback onTap,
     Color color = Colors.black87,
@@ -103,17 +141,10 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: color.withOpacity(0.1),
         child:
             icon is IconData
-                ? Icon(icon, color: color) // Jika IconData, gunakan Icon widget
+                ? Icon(icon, color: color)
                 : icon is String
-                ? SvgPicture.asset(
-                  icon, // Jika String, gunakan gambar SVG
-                  width: 24,
-                  height: 24,
-                )
-                : const Icon(
-                  Icons.error,
-                  color: Colors.red,
-                ), // Default jika tidak sesuai
+                ? SvgPicture.asset(icon, width: 24, height: 24)
+                : const Icon(Icons.error, color: Colors.red),
       ),
       title: Text(
         title,

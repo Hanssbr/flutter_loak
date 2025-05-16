@@ -1,8 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:project_sem2/data/datasource/auth_local_datasource.dart';
 import 'package:project_sem2/data/datasource/auth_remote_datasource.dart';
 import 'package:project_sem2/data/model/user_model.dart';
-import 'package:project_sem2/domain/entities/user_entity.dart';
 import 'package:project_sem2/domain/usecases/login_usecase.dart';
 import 'package:project_sem2/domain/usecases/logout_usecase.dart';
 import 'package:project_sem2/domain/usecases/register_usecase.dart';
@@ -75,6 +76,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         await authLocalDatasource.clearToken(); // hapus token jika error
         emit(AuthFailure(e.toString()));
+      }
+    });
+
+    on<UpdateProfile>((event, emit) async {
+      emit(UserLoading());
+
+      try {
+        final token = await AuthLocalDatasource().getToken();
+        if (token == null) {
+          emit(UserFailure('Token tidak ditemukan'));
+          return;
+        }
+
+        final result = await authRemoteDatasource.updateProfile(
+          token: token,
+          name: event.name,
+          email: event.email,
+          phone: event.phone,
+          photoBytes: event.photo, // Uint8List? bisa null
+          photoFilename: event.photoFilename ?? 'profile_photo.png',
+        );
+
+        print('RESPON UPDATE PROFILE: $result'); // debug dulu
+
+        if (result['data'] == null) {
+          throw Exception('Data user tidak ditemukan di response');
+        }
+
+        final user = UserModel.fromJson(result['data']);
+        emit(UserUpdatedSuccess(user));
+        emit(AuthLoaded(user));
+      } catch (e) {
+        emit(UserFailure(e.toString()));
       }
     });
   }
