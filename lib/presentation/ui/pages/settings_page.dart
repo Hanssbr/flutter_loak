@@ -38,19 +38,6 @@ class SettingsPage extends StatelessWidget {
               children: [
                 _buildSettingItem(
                   context,
-                  icon: Assets.icons.box.path,
-                  title: 'My Items',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyItemPage(),
-                      ),
-                    );
-                  },
-                ),
-                _buildSettingItem(
-                  context,
                   icon: Assets.icons.user.path,
                   title: 'My Profile',
                   onTap: () async {
@@ -70,6 +57,19 @@ class SettingsPage extends StatelessWidget {
                     if (result == true) {
                       context.read<AuthBloc>().add(FetchCurrentUser());
                     }
+                  },
+                ),
+                _buildSettingItem(
+                  context,
+                  icon: Assets.icons.box.path,
+                  title: 'My Items',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyItemPage(),
+                      ),
+                    );
                   },
                 ),
 
