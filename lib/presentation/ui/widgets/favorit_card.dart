@@ -24,7 +24,6 @@ class _FavoritCardState extends State<FavoritCard> {
         );
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 2,
         child: Column(
@@ -92,21 +91,33 @@ class _FavoritCardState extends State<FavoritCard> {
                     children: [
                       Icon(Icons.category, size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.favoritItem.category,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      Expanded(
+                        child: Text(
+                          widget.favoritItem.category,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.location_on,
                         size: 16,
                         color: Colors.grey[600],
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        widget.favoritItem.location,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
+                      Expanded(
+                        child: Text(
+                          widget.favoritItem.location,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),  
                     ],
                   ),
                 ],

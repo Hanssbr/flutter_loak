@@ -33,28 +33,44 @@ class _RecommendationPageState extends State<RecommendationPage> {
           if (state is RecomendsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is RecomendsLoaded) {
-            return GridView.builder(
-              itemCount: state.recomendsItems.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 2,
-                childAspectRatio: 0.65,
-              ),
-              itemBuilder: (context, index) {
-                final item = state.recomendsItems[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItemDetailPage(itemId: item.id),
-                      ),
-                    );
-                  },
-                  child: RecomendCard(recomendItems: item),
-                );
-              },
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    "Recommended Items",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: state.recomendsItems.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 2,
+                          mainAxisSpacing: 2,
+                          childAspectRatio: 0.65,
+                        ),
+                    itemBuilder: (context, index) {
+                      final item = state.recomendsItems[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => ItemDetailPage(itemId: item.id),
+                            ),
+                          );
+                        },
+                        child: RecomendCard(recomendItems: item),
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return const Center(child: Text("No data or failed to load."));
