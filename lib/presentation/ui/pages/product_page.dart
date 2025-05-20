@@ -44,12 +44,12 @@ class _ProductPageState extends State<ProductPage> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetItemLoaded) {
             if (state.items.isEmpty) {
-              return const Center(child: Text('Tidak ada produk ditemukan'));
+              return const Center(child: Text('Tidak ada items ditemukan'));
             }
 
             return _isGrid ? _buildGrid(state.items) : _buildList(state.items);
           } else {
-            return const Center(child: Text('Gagal memuat produk.'));
+            return const Center(child: Text('Gagal memuat items.'));
           }
         },
       ),

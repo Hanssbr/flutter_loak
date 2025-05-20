@@ -4,9 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/model/user_model.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
+import 'package:project_sem2/presentation/ui/pages/feedback_page.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
+import 'package:project_sem2/presentation/ui/pages/privacy_policy_page.dart';
 import 'package:project_sem2/presentation/ui/pages/profile_page.dart';
+import 'package:project_sem2/presentation/ui/pages/terms_conditions_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -72,44 +75,69 @@ class SettingsPage extends StatelessWidget {
                     );
                   },
                 ),
-
-                _buildSettingItem(
-                  context,
-                  icon: Icons.star_border,
-                  title: 'Rate App',
-                  onTap: () {},
-                ),
-                _buildSettingItem(
-                  context,
-                  icon: Icons.share_outlined,
-                  title: 'Share App',
-                  onTap: () {},
-                ),
                 const Divider(indent: 16, endIndent: 16),
                 _buildSettingItem(
                   context,
                   icon: Icons.privacy_tip_outlined,
                   title: 'Privacy Policy',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrivacyPolicyPage(),
+                      ),
+                    );
+                  },
                 ),
                 _buildSettingItem(
                   context,
                   icon: Icons.description_outlined,
                   title: 'Terms and Conditions',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TermsConditionsPage(),
+                      ),
+                    );
+                  },
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 _buildSettingItem(
                   context,
                   icon: Icons.email_outlined,
                   title: 'Contact Us',
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Hubungi Kami'),
+                          content: Text(
+                            'Silakan hubungi kami melalui email di:\nGiveBox@mail.com',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
+
                 _buildSettingItem(
                   context,
                   icon: Icons.feedback_outlined,
                   title: 'Feedback',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FeedbackPage()),
+                    );
+                  },
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 _buildSettingItem(

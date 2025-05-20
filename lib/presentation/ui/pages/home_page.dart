@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   NavItem(
                     iconPath: Assets.icons.box.path,
-                    label: 'Product',
+                    label: 'Boxes',
                     isActive: _selectedIndex == 1,
                     onTap: () => _onItemTapped(1),
                   ),

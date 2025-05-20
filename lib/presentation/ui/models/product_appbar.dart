@@ -43,34 +43,35 @@ class _ProductAppBarState extends State<ProductAppBar> {
     return AppBar(
       backgroundColor: AppColors.matcha,
       elevation: 3,
-      title: _isSearching
-          ? Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Cari produk...',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: InputBorder.none,
+      title:
+          _isSearching
+              ? Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(24),
                 ),
-                style: const TextStyle(color: Colors.black87),
-                onChanged: widget.onSearch,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Cari produk...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                  ),
+                  style: const TextStyle(color: Colors.black87),
+                  onChanged: widget.onSearch,
+                ),
+              )
+              : const Text(
+                'Daftar Items',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
-            )
-          : const Text(
-              'Daftar Produk',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
       actions: [
         IconButton(
           icon: Icon(
