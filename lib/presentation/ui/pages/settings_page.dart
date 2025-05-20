@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:project_sem2/core/utils/core.dart';
 import 'package:project_sem2/data/model/user_model.dart';
 import 'package:project_sem2/presentation/bloc/auth_bloc.dart';
-import 'package:project_sem2/presentation/ui/pages/feedback_page.dart';
 import 'package:project_sem2/presentation/ui/pages/login_page.dart';
 import 'package:project_sem2/presentation/ui/pages/my_item_page.dart';
 import 'package:project_sem2/presentation/ui/pages/privacy_policy_page.dart';
@@ -124,18 +123,6 @@ class SettingsPage extends StatelessWidget {
                           ],
                         );
                       },
-                    );
-                  },
-                ),
-
-                _buildSettingItem(
-                  context,
-                  icon: Icons.feedback_outlined,
-                  title: 'Feedback',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FeedbackPage()),
                     );
                   },
                 ),
