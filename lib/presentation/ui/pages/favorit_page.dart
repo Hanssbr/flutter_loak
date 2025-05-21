@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_sem2/presentation/ui/bloc/bloc/favorit_bloc.dart';
+import 'package:project_sem2/presentation/ui/models/fav_appbar.dart';
 import 'package:project_sem2/presentation/ui/widgets/favorit_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +33,7 @@ class _FavoritPageState extends State<FavoritPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FavAppbar(title: 'Favorite Page'),
       body: BlocBuilder<FavoritBloc, FavoritState>(
         builder: (context, state) {
           if (state is FavoritLoading) {
