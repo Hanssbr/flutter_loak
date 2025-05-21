@@ -87,7 +87,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile berhasil diupdate")),
+        const SnackBar(
+          content: Text("Profile berhasil diupdate"),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
 
       Navigator.pop(context, true);
