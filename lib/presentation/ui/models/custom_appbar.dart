@@ -34,7 +34,7 @@ class _ModernAppBarState extends State<ModernAppBar> {
         // Avatar dan Greeting
         Positioned(
           left: 16,
-          top: 70,
+          top: 50,
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthLoading) {
