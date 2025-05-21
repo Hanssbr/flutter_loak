@@ -104,8 +104,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () => _onItemTapped(2),
                   ),
                   NavItem(
-                    iconPath: Assets.icons.user.path,
-                    label: 'profile',
+                    iconPath: Assets.icons.setting.path,
+                    label: 'Setting',
                     isActive: _selectedIndex == 3,
                     onTap: () => _onItemTapped(3),
                   ),

@@ -28,6 +28,7 @@ class $AssetsIconsGen {
   SvgGenImage get background => SvgGenImage('assets/icons/Announcement.svg');
   SvgGenImage get favorite => SvgGenImage('assets/icons/favorite.svg');
   SvgGenImage get unfavorite => SvgGenImage('assets/icons/unfavorite.svg');
+  SvgGenImage get setting => SvgGenImage('assets/icons/settings-02.svg');
 }
 
 class SvgGenImage {
