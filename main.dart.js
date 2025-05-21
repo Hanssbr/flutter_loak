@@ -113196,7 +113196,7 @@ var s=this.c
 s.toString
 J.ea(A.cs(s,!1,t.tj),new A.q8())},
 N(a){var s=null
-return A.fn(B.b5,A.a([A.bm(A.aY6("assets/images/Announcement.png",B.c5),180,1/0),A.il(s,A.tE(s,s,new A.aOd(),t.tj,t.FB),s,s,16,s,70,s)],t.p),B.z,B.aS,s)}}
+return A.fn(B.b5,A.a([A.bm(A.aY6("assets/images/Announcement.png",B.c5),180,1/0),A.il(s,A.tE(s,s,new A.aOd(),t.tj,t.FB),s,s,16,s,50,s)],t.p),B.z,B.aS,s)}}
 A.aOd.prototype={
 $2(a,b){var s,r=null
 if(b instanceof A.nz)return B.qx
