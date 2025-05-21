@@ -113450,7 +113450,7 @@ D4(a){this.an(new A.aMn(this,a))},
 N(a){var s,r=this,q=null,p=r.e[r.d],o=A.bgY(B.lY,new A.lT("assets/icons/Vector.svg").og(B.k,24,24),0,q,q,!1,new A.aMq(a),B.lH),n=r.d,m=t.p
 n=A.iV(A.f_(A.a([new A.vn("assets/icons/home-03.svg","Home",n===0,new A.aMr(r),q),new A.vn("assets/icons/proicons_box.svg","Boxes",n===1,new A.aMs(r),q)],m),B.a1,B.hD,B.U),1)
 s=r.d
-return A.hR(q,q,p,new A.E_(A.f_(A.a([n,B.anC,A.iV(A.f_(A.a([new A.vn("assets/icons/Icon-1.svg","Favorit",s===2,new A.aMt(r),q),new A.vn("assets/icons/user-circle.svg","profile",s===3,new A.aMu(r),q)],m),B.a1,B.hD,B.U),1)],m),B.a1,B.hD,B.U),B.k,B.Ne,8,70,q),o,B.qu,q,q)}}
+return A.hR(q,q,p,new A.E_(A.f_(A.a([n,B.anC,A.iV(A.f_(A.a([new A.vn("assets/icons/Icon-1.svg","Favorit",s===2,new A.aMt(r),q),new A.vn("assets/icons/settings-02.svg","Setting",s===3,new A.aMu(r),q)],m),B.a1,B.hD,B.U),1)],m),B.a1,B.hD,B.U),B.k,B.Ne,8,70,q),o,B.qu,q,q)}}
 A.aMn.prototype={
 $0(){this.a.d=this.b},
 $S:0}
